@@ -20,10 +20,15 @@ train_gtdirs = glob(os.path.join(train_gtfolder, '*.jpg'))
 test_dirs = glob(os.path.join(test_folder, '*.jpg'))
 test_gtdirs = glob(os.path.join(test_gtfolder, '*.jpg'))
 
+train_dirs.sort()
+train_gtdirs.sort()
+test_dirs.sort()
+test_gtdirs.sort()
+
 
 batch_size = 8
-epochs = 500
-iterations = (len(train_dirs)//8 + 1) * epochs
+epochs = 2000
+iterations = (len(train_dirs)//batch_size + 1) * epochs
 height, width = 256, 256
 
 
@@ -32,7 +37,7 @@ alpha_num = 1
 lam_lp = 1.0
 lam_gdl = 1.0
 
-trial = 3
+trial = 4
 
 
 summary_dir = 'v_summary/trial_{}'.format(trial)
@@ -42,8 +47,7 @@ if not os.path.exists(summary_dir):
 snapshot_dir = 'v_snapshot/trial_{}'.format(trial)
 if not os.path.exists(snapshot_dir):
     os.makedirs(snapshot_dir)
-
-
+    
 
 lr_bounds = [7000]
 lr = [0.0001, 1e-05]
@@ -159,8 +163,8 @@ with tf.name_scope('training'):
 tf.summary.scalar(tensor=train_psnr_error, name='train_psnr_error')
 tf.summary.scalar(tensor=test_psnr_error, name='test_psnr_error')
 tf.summary.scalar(tensor=g_loss, name='g_loss')
-tf.summary.scalar(tensor=lp_loss, name='intensity_loss')
-tf.summary.scalar(tensor=gdl_loss, name='gradient_loss')
+#tf.summary.scalar(tensor=adv_loss, name='adv_loss')
+#tf.summary.scalar(tensor=dis_loss, name='dis_loss')
 tf.summary.image(tensor=train_outputs, name='train_outputs')
 tf.summary.image(tensor=train_gt, name='train_gt')
 tf.summary.image(tensor=test_outputs, name='test_outputs')
